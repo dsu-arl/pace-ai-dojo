@@ -1,4 +1,4 @@
-# Example Dojo
+# AI Dojo
 
 This repositories features an example dojo.
 
