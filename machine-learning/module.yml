@@ -2,11 +2,16 @@ name: Machine Learning
 challenges:
   - id: level1
     name: Level 1 - Linear Regression
+    allow_privileged: false
   - id: level2
     name: Level 2 - Logistic Regression
+    allow_privileged: false
   - id: level3
     name: Level 3 - Decision Trees
+    allow_privileged: false
   - id: level4
     name: Level 4 - Random Forests
+    allow_privileged: false
   - id: level5
     name: Level 5 - Hyperparameters
+    allow_privileged: false

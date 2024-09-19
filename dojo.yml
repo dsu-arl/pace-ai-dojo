@@ -1,8 +1,8 @@
 id: ai
 name: AI Dojo
-type: example
+type: roadshow
 award:
-  emoji: 😀
+  emoji: 🤖
 modules:
   - id: machine-learning
   - id: deep-learning
