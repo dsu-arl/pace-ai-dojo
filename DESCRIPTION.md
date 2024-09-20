@@ -1,2 +1,1 @@
-# Artificial Intelligence (AI)
-
+Our world is increasingly being shaped by artificial intelligence (AI). Its applications are rapidly expanding across various sectors, including healthcare, transportation, customer service, manufacturing, and education. But how does AI influence the tools we use and the decisions we make? What complexities lie beneath the surface of these intelligent systems? In this dojo, you will be introduced to the world of artificial intelligence and how to apply it.
