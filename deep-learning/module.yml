@@ -1,0 +1,5 @@
+name: Deep Learning
+challenges:
+  - id: level1
+    name: Level 1 - A Single Neuron
+    allow_privileged: false

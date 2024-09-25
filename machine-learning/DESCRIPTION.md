@@ -17,3 +17,5 @@ Some of the machine learning algorithms that will be covered in this module incl
 - Logistic regression
 - Decision tree
 - Random forest
+
+![A Linear Unit](LinearUnit.png)
