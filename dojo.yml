@@ -4,4 +4,5 @@ type: roadshow
 award:
   emoji: 🤖
 modules:
-  - id: machine-learning
+- id: machine-learning
+- id: deep-learning

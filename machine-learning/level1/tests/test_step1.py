@@ -14,7 +14,7 @@ def test_incorrect_X(split_data, capfd):
 
 
 # Make sure that data for y is correct (y_train length + y_test length == y length)
-def test_y(split_data, capfd):
+def test_incorrect_y(split_data, capfd):
     X_train, X_test, y_train, _ = split_data
     step_1_check(X_train, X_test, y_train, y_train)
     captured = capfd.readouterr()
