@@ -196,6 +196,18 @@ def delete_challenge():
         print('Not deleting the challenge')
 
 
+def hide_modules():
+    action = inquirer.checkbox(
+        message='Choose which modules to display on pwncollege dojo:',
+        choices=[
+            Choice(name='Machine Learning', value='machine-learning', enabled=True),
+            Choice(name='Deep Learning', value='deep-learning', enabled=True),
+            Choice(name='Poison Attacks', value='poison-attacks', enabled=False),
+        ]
+    ).execute()
+
+
+
 ######################### DISPLAY MENU #########################
 def display_menu():
     global modules
@@ -215,6 +227,7 @@ def display_menu():
             Choice(name='Delete Module', value=delete_module),
             Choice(name='Delete Challenge', value=delete_challenge),
             Separator(),
+            Choice(name='Show/Hide Modules', value=hide_modules),
             Choice(name='Quit', value=None),
         ],
         default=1
