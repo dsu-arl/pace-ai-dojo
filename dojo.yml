@@ -5,4 +5,4 @@ award:
   emoji: 🤖
 modules:
 - id: machine-learning
-- id: deep-learning
+  name: Machine Learning

@@ -1,11 +1,5 @@
 # AI Dojo
 
-## Running manage_dojo.py
-```commandline
-pip install inquirerpy
-pip install PyYAML
-```
-
 This repositories features an example dojo.
 
 The dojo is defined by [dojo.yml](./dojo.yml).

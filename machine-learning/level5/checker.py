@@ -5,6 +5,13 @@ from sklearn.metrics import log_loss
 from sklearn.model_selection import train_test_split
 
 
+def print_flag():
+    try:
+        with open('/flag', 'r') as file:
+            print(file.read())
+    except FileNotFoundError:
+        print('Error: Flag file not found.')
+
 _correct_count = {
     'step 1': False
 }
@@ -43,4 +50,4 @@ def step_1_check(n_estimators):
         # Add in check to see if all values in _correct_count are set to True
         if all(_correct_count.values()):
             print('Congratulations! You have passed this level! Here is your flag:')
-            print('pwn.college{Y7o9vEOKP3wb9p32wW14Ypr9XIn.dljM3MDL2QjNzYzW}')
+            print_flag()
