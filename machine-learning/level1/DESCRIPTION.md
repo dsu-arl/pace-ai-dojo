@@ -34,4 +34,32 @@ mse = mean_squared_error(y_test, y_pred)
 ```
 Since `y_test` contains the true values from `X_test` which is what we made our predictions for, we can use that to compare with our output `y_pred` to calculate the mean squared error.
 
-In this level, we will train a linear regression model on the California housing dataset to predict the median house value based on factors such as location, median house age, population within a block, and median income within a block of houses. You will then evaluate the model by calculating its mean squared error.
+In this challenge, we will train a linear regression model on the California housing dataset to predict the median house value based on factors such as location, median house age, population within a block, and median income within a block of houses. You will then evaluate the model by calculating its mean squared error.
+
+Create a Python file and paste the following code into the top of it:
+```python
+import pandas as pd
+from sklearn.datasets import fetch_california_housing
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
+
+california = fetch_california_housing()
+df = pd.DataFrame(california.data, columns=california.feature_names)
+df['MedHouseVal'] = california.target
+
+X = df.drop('MedHouseVal', axis=1)
+y = df['MedHouseVal']
+```
+Don't worry about fully understanding this code. This just imports our necessary libraries to complete the challenge and gets the data into the correct format.
+
+Complete the following steps to pass this challenge:
+
+1. Split the dataset into training and testing datasets using train_test_split()
+2. Create a linear regression model
+3. Fit the linear regression model to the training dataset
+4. Make predictions on the test dataset using the trained linear regression model
+5. Get the mean squared error from the test dataset and the linear regression model's predictions
+6. Print the value of the MSE variable
+
+You can test your code by running `python <your_file>.py`. When you're ready to verify your solution, you can run `verify <your_file>.py`.

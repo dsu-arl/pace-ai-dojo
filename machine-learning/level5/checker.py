@@ -1,9 +1,4 @@
-import numpy as np
-from sklearn.datasets import load_iris
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import log_loss
-from sklearn.model_selection import train_test_split
-
+#!/opt/pwn.college/python
 
 def print_flag():
     try:
