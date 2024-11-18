@@ -15,9 +15,8 @@ def print_flag():
 
 
 def unparse(node):
-    """A simple unparser for Python AST nodes."""
+    """A backport of ast.unparse for Python 3.8."""
     import ast
-    import _ast
 
     class _Unparser(ast.NodeVisitor):
         def __init__(self):
@@ -49,12 +48,34 @@ def unparse(node):
             self.result += f" {self.operator(node.op)} "
             self.visit(node.right)
 
+        def visit_Attribute(self, node):
+            # Handles attribute access like model.fit
+            self.visit(node.value)  # Visit the base (e.g., model)
+            self.result += f".{node.attr}"  # Append the attribute name (e.g., fit)
+
+        def visit_Call(self, node):
+            # Handles function/method calls like model.fit()
+            self.visit(node.func)  # Visit the function being called
+            self.result += "("
+            for i, arg in enumerate(node.args):
+                if i > 0:
+                    self.result += ", "
+                self.visit(arg)  # Visit each argument
+            self.result += ")"
+
+        def visit_arguments(self, node):
+            # Handle arguments for function definitions (not relevant here)
+            pass
+
         def operator(self, op):
             if isinstance(op, ast.Add):
                 return "+"
             if isinstance(op, ast.Sub):
                 return "-"
-            # Add other operators as needed
+            if isinstance(op, ast.Mult):
+                return "*"
+            if isinstance(op, ast.Div):
+                return "/"
             raise NotImplementedError(f"Operator {op} not implemented")
 
     unparser = _Unparser()
@@ -72,7 +93,6 @@ def extract_python_details(filepath):
         if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
             # Handle unpacked variables (tuple or list)
             if isinstance(node.targets[0], (ast.Tuple, ast.List)):
-                # variable = tuple(ast.unparse(var) for var in node.targets[0].elts)
                 variable = tuple(unparse(var) for var in node.targets[0].elts)
             # Single variable assignment
             elif isinstance(node.targets[0], ast.Name):
@@ -80,9 +100,6 @@ def extract_python_details(filepath):
             else:
                 variable = None
             
-            # func = ast.unparse(node.value.func)
-            # args = [ast.unparse(arg) for arg in node.value.args]
-            # kwargs = {kw.arg: ast.unparse(kw.value) for kw in node.value.keywords}
             func = unparse(node.value.func)
             args = [unparse(arg) for arg in node.value.args]
             kwargs = {kw.arg: unparse(kw.value) for kw in node.value.keywords}
@@ -96,9 +113,6 @@ def extract_python_details(filepath):
 
         # Handle standalone function calls like model.fit(...)
         elif isinstance(node, ast.Expr) and isinstance(node.value, ast.Call):
-            # func = ast.unparse(node.value.func)
-            # args = [ast.unparse(arg) for arg in node.value.args]
-            # kwargs = {kw.arg: ast.unparse(kw.value) for kw in node.value.keywords}
             func = unparse(node.value.func)
             args = [unparse(arg) for arg in node.value.args]
             kwargs = {kw.arg: unparse(kw.value) for kw in node.value.keywords}
