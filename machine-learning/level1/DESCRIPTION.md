@@ -1,4 +1,4 @@
-Linear regression is a fundamental machine learning algorithm used for predicting continuous values. The goal is to find the linear relationship between input features (independent variables) and the target variable (dependent variable).
+Linear regression is a fundamental machine learning algorithm used for predicting continuous values. The goal is to find the linear relationship between input features (independent variables) and the target variable (dependent variable). Linear regression is like drawing a straight line to connect points on a graph. Imagine you want to know how much candy you can buy with your money. The line helps you see the relationship between how much money you have (input) and how much candy you can get (output). It finds the best line that shows this relationship!
 
 To define a linear regression model, we first need to import it from the sklearn module:
 
@@ -55,7 +55,7 @@ Don't worry about fully understanding this code. This just imports our necessary
 
 Complete the following steps to pass this challenge:
 
-1. Split the dataset into training and testing datasets using train_test_split()
+1. Split the dataset into training and testing datasets using `train_test_split()`
 2. Create a linear regression model
 3. Fit the linear regression model to the training dataset
 4. Make predictions on the test dataset using the trained linear regression model

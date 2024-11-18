@@ -175,7 +175,7 @@ def step_1_check(lines) -> bool:
 
     solution_args = ['X', 'y']
     if function_call['args'] != solution_args:
-        print('You need to pass X and y so train_test_split() knows what data to split')
+        print('You need to pass X and y to train_test_split() so knows what data to split')
         return False
     
     solution_kwargs = {'test_size': '0.2', 'random_state': '42'}

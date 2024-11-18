@@ -1,5 +1,8 @@
 name: Machine Learning
 challenges:
+  - id: splitting-dataset-1
+    name: Splitting the Dataset - Level 1
+    allow_privileged: false
   - id: level1
     name: Level 1 - Linear Regression
     allow_privileged: false
