@@ -31,13 +31,7 @@ y_train_var = None
 y_test_var = None
 model_var = None
 y_pred_var = None
-mse_var = None
-
-
-# {'variable': None, 'function': 'model.fit', 'args': ['X_train', 'y_train'], 'kwargs': {}}
-# {'variable': 'y_pred', 'function': 'model.predict', 'args': ['X_test'], 'kwargs': {}}
-# {'variable': 'accuracy', 'function': 'accuracy_score', 'args': ['y_test', 'y_pred'], 'kwargs': {}}
-# {'variable': None, 'function': 'print', 'args': ["'Accuracy:'", 'accuracy'], 'kwargs': {}}
+accuracy_var = None
 
 
 def step_1_check(lines: list[dict]):
@@ -137,6 +131,49 @@ def step_3_check(lines: list[dict]):
              and a string message providing error details if failure
     :rtype: tuple[bool, str]
     """
+    # {'variable': None, 'function': 'model.fit', 'args': ['X_train', 'y_train'], 'kwargs': {}}
+    global X_train_var
+    global y_train_var
+    global model_var
+    function_calls = find_function_call(lines, f'{model_var}.fit')
+
+    # Check if fit() is called
+    if len(function_calls) == 0:
+        return False, f"{model_var}.fit() isn't called"
+
+    # Make sure fit() is only called once
+    if len(function_calls) > 1:
+        return False, f"{model_var}.fit() shouldn't be called more than once"
+
+    function_call = function_calls[0]
+
+    # fit() shouldn't be assigned to any variables
+    if function_call['variable'] is not None:
+        return False, f"{model_var}.fit() shouldn't be assigned to any variables"
+    
+    # Make sure parameters passed to fit() are correct
+    solution_1_args = [X_train_var, y_train_var]
+    solution_1_kwargs = {}
+
+    solution_2_args = []
+    solution_2_kwargs = {'X': X_train_var, 'y': y_train_var}
+
+    args = function_call['args']
+    kwargs = function_call['kwargs']
+
+    check_passed = True
+    if args == solution_1_args:
+        if kwargs != solution_1_kwargs:
+            check_passed = False
+    elif args == solution_2_args:
+        if kwargs != solution_2_kwargs:
+            check_passed = False
+    else:
+        check_passed = False
+    
+    if not check_passed:
+        return False, f'Incorrect parameters for {model_var}.fit(), are you correctly passing the training data to it?'
+    
     return True, ''
 
 
@@ -150,6 +187,48 @@ def step_4_check(lines: list[dict]):
              and a string message providing error details if failure
     :rtype: tuple[bool, str]
     """
+    # {'variable': 'y_pred', 'function': 'model.predict', 'args': ['X_test'], 'kwargs': {}}
+    global X_test_var
+    global model_var
+    global y_pred_var
+    function_calls = find_function_call(lines, f'{model_var}.predict')
+
+    # Check if predict() is called
+    if len(function_calls) == 0:
+        return False, f"{model_var} isn't called"
+
+    # Make sure predict() is only called once
+    if len(function_calls) > 1:
+        return False, f"{model_var}.predict() shouldn't be called more than once"
+
+    function_call = function_calls[0]
+
+    # predict() should only be assigned to a single value and not None
+    if not isinstance(function_call['variable'], str) or function_call['variable'] is None:
+        return False, f"{model_var}.predict() should only be assigned to a single variable"
+    
+    y_pred_var = function_call['variable']
+
+    solution_1_args = [X_test_var]
+    solution_1_kwargs = {}
+    solution_2_args = []
+    solution_2_kwargs = {'X': X_test_var}
+    args = function_call['args']
+    kwargs = function_call['kwargs']
+
+    check_passed = True
+    if args == solution_1_args:
+        if kwargs != solution_1_kwargs:
+            check_passed = False
+    elif args == solution_2_args:
+        if kwargs != solution_2_kwargs:
+            check_passed = False
+    else:
+        check_passed = False
+    
+    if not check_passed:
+        return False, f'Incorrect parameters for {model_var}.predict(), are you correctly passing the test data to it?'
+
     return True, ''
 
 
@@ -163,6 +242,50 @@ def step_5_check(lines: list[dict]):
              and a string message providing error details if failure
     :rtype: tuple[bool, str]
     """
+    # {'variable': 'accuracy', 'function': 'accuracy_score', 'args': ['y_test', 'y_pred'], 'kwargs': {}}
+    global y_test_var
+    global y_pred_var
+    global model_var
+    global accuracy_var
+    function_calls = find_function_call(lines, 'accuracy_score')
+
+    # Check if accuracy_score() is called
+    if len(function_calls) == 0:
+        return False, f"accuracy_score() isn't called"
+
+    # Make sure accuracy_score() is only called once
+    if len(function_calls) > 1:
+        return False, f"accuracy_score() shouldn't be called more than once"
+    
+    function_call = function_calls[0]
+
+    # accuracy_score() should only be assigned to a single value and not None
+    if not isinstance(function_call['variable'], str) or function_call['variable'] is None:
+        return False, "accuracy_score() should only be assigned to a single variable"
+    accuracy_var = function_call['variable']
+    
+    # Check parameters for accuracy_score()
+    solution_1_args = [y_test_var, y_pred_var]
+    solution_1_kwargs = {}
+    solution_2_args = []
+    solution_2_kwargs = {'y_true': y_test_var, 'y_pred': y_pred_var}
+
+    args = function_call['args']
+    kwargs = function_call['kwargs']
+
+    check_passed = True
+    if args == solution_1_args:
+        if kwargs != solution_1_kwargs:
+            check_passed = False
+    elif args == solution_2_args:
+        if kwargs != solution_2_kwargs:
+            check_passed = False
+    else:
+        check_passed = False
+    
+    if not check_passed:
+        return False, f'Incorrect parameters for accuracy_score(), are you correctly passing the test output and model output to it?'
+
     return True, ''
 
 
@@ -176,6 +299,31 @@ def step_6_check(lines: list[dict]):
              and a string message providing error details if failure
     :rtype: tuple[bool, str]
     """
+    global accuracy_var
+    function_calls = find_function_call(lines, 'print')
+
+    # Check if print() is called
+    if len(function_calls) == 0:
+        return False, f"print() isn't called"
+
+    # Make sure print() is only called once
+    if len(function_calls) > 1:
+        return False, f"print() shouldn't be called more than once"
+    
+    function_call = function_calls[0]
+
+    # print() shouldn't be assigned to any variables
+    if function_call['variable'] is not None:
+        return False, "print() shouldn't be assigned to any variables"
+
+    # accuracy_var should be in print()'s args and kwargs should be empty
+    if accuracy_var not in function_call['args']:
+        return False, 'Are you printing out the correct variable for the accuracy?'
+    
+    # kwargs should be empty
+    if function_call['kwargs'] != {}:
+        return False, "You don't need any keyword arguments for this print statement"
+    
     return True, ''
 
 
