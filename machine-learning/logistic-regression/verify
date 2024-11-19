@@ -34,7 +34,6 @@ y_pred_var = None
 mse_var = None
 
 
-# {'variable': 'model', 'function': 'LogisticRegression', 'args': [], 'kwargs': {}}
 # {'variable': None, 'function': 'model.fit', 'args': ['X_train', 'y_train'], 'kwargs': {}}
 # {'variable': 'y_pred', 'function': 'model.predict', 'args': ['X_test'], 'kwargs': {}}
 # {'variable': 'accuracy', 'function': 'accuracy_score', 'args': ['y_test', 'y_pred'], 'kwargs': {}}
@@ -100,6 +99,31 @@ def step_2_check(lines: list[dict]):
              and a string message providing error details if failure
     :rtype: tuple[bool, str]
     """
+    # {'variable': 'model', 'function': 'LogisticRegression', 'args': [], 'kwargs': {}}
+    global model_var
+    function_calls = find_function_call(lines, 'LogisticRegression')
+
+    # Check if LogisticRegression is called
+    if len(function_calls) == 0:
+        return False, "LogisticRegression isn't called"
+    
+    # LogisticRegression() should only be called once
+    if len(function_calls) > 1:
+        return False, 'LogisticRegression() should only be called once'
+    
+    function_call = function_calls[0]
+
+    # Make sure it's assigned to a variable (not including _)
+    if function_call['variable'] is None:
+        return False, 'LogisticRegression() should be assigned to a variable'
+    
+    model_var = function_call['variable']
+
+    solution_args = []
+    solution_kwargs = {}
+    if function_call['args'] != solution_args or function_call['kwargs'] != solution_kwargs:
+        return False, "You shouldn't be passing any parameters to LogisticRegression() for this challenge"
+
     return True, ''
 
 
