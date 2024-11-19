@@ -197,7 +197,7 @@ def check_y(lines) -> tuple[bool, str]:
         return False, 'Did you provide the correct low and high bounds specified in the instructions?'
 
     if function_call['kwargs'] != {'size': '500'}:
-        return False, "The 'size' parameter is either has the incorrect value or isn't specified in the function"
+        return False, "The 'size' parameter either has the incorrect value or isn't specified in the function call"
 
     return True, ''
 
@@ -241,8 +241,6 @@ if __name__ == '__main__':
     
     script_path = sys.argv[1]
     lines = extract_python_details(script_path)
-    for line in lines:
-        print(line)
 
     red_text_code = '\033[31m'
     green_text_code = '\033[32m'

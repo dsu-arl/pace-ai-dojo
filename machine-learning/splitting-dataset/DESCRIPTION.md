@@ -19,7 +19,7 @@ First, we will create `X`, our model inputs, using `numpy`'s `random.rand()` fun
 X = np.random.rand(100, 3)
 ```
 
-Now we will create `y`, the correct output for the model to reference, using `numpy`'s `random.randint()` function. For this example we want our model to output either a no or yes (0 or 1). The first parameter is the low value which in our case is 0. The second parameter is the high value and we'll set to be 2 since it's exclusive. This will only output 0s and 1s. The final parameter we will set is the size, which is the number of samples which is the same as the value set in the last example.
+Now we will create `y`, the correct output for the model to reference, using `numpy`'s `random.randint()` function. For this example we want our model to output either a no or yes (0 or 1). The first parameter is the low value, which in our case is 0. The second parameter is the high value and we'll set to be 2 since it's exclusive. This will only output 0s and 1s. The final parameter we will set is the size, which is the number of samples which is the same as the value set in the last example.
 ```python
 y = np.random.randint(0, 2, size=100)
 ```
@@ -47,11 +47,18 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 ```
 
 ```
-NOTE: Another useful parameter to set in `train_test_split()` is the `random_state` parameter which controls the randomness of the data splitting process, ensuring that you can reproduce the same split every time you run the code.
+NOTE: Another useful parameter to set in 'train_test_split()' is the 'random_state' parameter which controls the randomness of the data splitting process, ensuring that you can reproduce the same split every time you run the code.
+```
+
+Create a Python file and copy and paste the following imports statements into the top of the file before starting on the steps:
+```python
+import numpy as np
+from sklearn.model_selection import train_test_split
 ```
 
 Complete the following steps to pass this challenge:
-1. Import `numpy` and give it an alias of `np` (HINT: Give an alias to an imported function using `as`)
-2. Create `X` using `np.random.rand()` which has 500 samples and 7 features
-3. Create `y` using `np.random.randint()` which has 500 samples and outputs either 0 or 1
-4. Split the dataset where the train dataset is 70% of the original dataset
+1. Create `X` using `np.random.rand()` which has 500 samples and 7 features
+2. Create `y` using `np.random.randint()` which has 500 samples and outputs either 0 or 1
+3. Split the dataset where the train dataset is 70% of the original dataset
+
+You can test your code by running `python <your_file>.py`. When you're ready to verify your solution, you can run `verify <your_file>.py`.
