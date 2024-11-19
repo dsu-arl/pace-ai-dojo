@@ -18,7 +18,7 @@ X_var = None
 y_var = None
 
 
-def check_X(lines) -> tuple[bool, str]:
+def check_X(lines):
     # Create `X` using `np.random.rand()` which has 500 samples and 7 features
     # {'variable': 'X', 'function': 'np.random.rand', 'args': ['num_samples', 'num_features'], 'kwargs': {}}
     # {'variable': 'X', 'function': 'np.random.rand', 'args': ['500', '7'], 'kwargs': {}}
@@ -49,7 +49,7 @@ def check_X(lines) -> tuple[bool, str]:
     return True, ''
 
 
-def check_y(lines) -> tuple[bool, str]:
+def check_y(lines):
     # GOAL: Create `y` using `np.random.randint()` which has the same amount of samples and outputs either 0 or 1
     # {'variable': 'y', 'function': 'np.random.randint', 'args': ['0', '2'], 'kwargs': {'size': 'num_samples'}}
     global y_var
@@ -80,7 +80,7 @@ def check_y(lines) -> tuple[bool, str]:
     return True, ''
 
 
-def check_split(lines) -> tuple[bool, str]:
+def check_split(lines):
     # GOAL: Split the dataset where the train dataset is 70% of the original dataset
     # {'variable': ('X_train', 'X_test', 'y_train', 'y_test'), 'function': 'train_test_split', 'args': ['X', 'y'], 'kwargs': {'test_size': '0.3'}}
     global X_var
