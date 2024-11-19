@@ -1,7 +1,7 @@
 name: Machine Learning
 challenges:
   - id: splitting-dataset
-    name: Splitting the Dataset
+    name: Splitting Datasets
     allow_privileged: false
   - id: linear-regression
     name: Linear Regression
@@ -16,5 +16,5 @@ challenges:
     name: Random Forests
     allow_privileged: false
   - id: hyperparameters
-    name: Level 5 - Hyperparameters
+    name: Hyperparameters
     allow_privileged: false
