@@ -145,7 +145,7 @@ y_pred_var = None
 mse_var = None
 
 
-def step_1_check(lines) -> bool:
+def step_1_check(lines) -> tuple[bool, str]:
     # GOAL: Split the dataset into training and testing datasets using train_test_split()
     # {'variable': ('X_train', 'X_test', 'y_train', 'y_test'), 'function': 'train_test_split', 'args': ['X', 'y'], 'kwargs': {'test_size': '0.2', 'random_state': '42'}}
     global X_train_var
@@ -156,37 +156,32 @@ def step_1_check(lines) -> bool:
     
     # check if train_test_split() is called
     if len(function_calls) == 0:
-        print("train_test_split() isn't called")
-        return False
+        return False, "train_test_split() isn't called"
 
     # train_test_split() should only be called once
     if len(function_calls) > 1:
-        print('train_test_split() should only be called once')
-        return False
+        return False, 'train_test_split() should only be called once'
     
     function_call = function_calls[0]
 
     # train_test_split() should be unpacked into four variables
     if len(function_call['variable']) != 4:
-        print('train_test_split() should be unpacked into 4 variables')
-        return False
+        return False, 'train_test_split() should be unpacked into 4 variables'
 
     X_train_var, X_test_var, y_train_var, y_test_var = function_call['variable']
 
     solution_args = ['X', 'y']
     if function_call['args'] != solution_args:
-        print('You need to pass X and y to train_test_split() so knows what data to split')
-        return False
+        return False, 'You need to pass X and y to train_test_split() so knows what data to split'
     
     solution_kwargs = {'test_size': '0.2', 'random_state': '42'}
     if function_call['kwargs'] != solution_kwargs:
-        print("train_test_split() parameters don't match what's expected, did you give 'test_size' and 'random_state' the correct values from the instructions?")
-        return False
+        return False, "train_test_split() parameters don't match what's expected, did you give 'test_size' and 'random_state' the correct values from the instructions?"
 
-    return True
+    return True, ''
 
 
-def step_2_check(lines) -> bool:
+def step_2_check(lines) -> tuple[bool, str]:
     # GOAL: Create a linear regression model
     # {'variable': 'model', 'function': 'LinearRegression', 'args': [], 'kwargs': {}}
     global model_var
@@ -194,33 +189,29 @@ def step_2_check(lines) -> bool:
 
     # check if LinearRegression() is called
     if len(function_calls) == 0:
-        print("LinearRegression() isn't called")
-        return False
+        return False, "LinearRegression() isn't called"
 
     # LinearRegression() should only be called once
     if len(function_calls) > 1:
-        print('LinearRegression() should only be called once')
-        return False
+        return False, 'LinearRegression() should only be called once'
 
     function_call = function_calls[0]
 
     # Make sure it's assigned to a variable (not _)
     if function_call['variable'] is None:
-        print('LinearRegression() should be assigned to a variable')
-        return False
+        return False, 'LinearRegression() should be assigned to a variable'
     
     model_var = function_call['variable']
 
     solution_args = []
     solution_kwargs = {}
     if function_call['args'] != solution_args or function_call['kwargs'] != solution_kwargs:
-        print("You shouldn't be passing any parameters to LinearRegression() for this challenge")
-        return False
+        return False, "You shouldn't be passing any parameters to LinearRegression() for this challenge"
 
-    return True
+    return True, ''
 
 
-def step_3_check(lines) -> bool:
+def step_3_check(lines) -> tuple[bool, str]:
     # GOAL: Fit the linear regression model to the training dataset
     # {'variable': None, 'function': 'model.fit', 'args': ['X_train', 'y_train'], 'kwargs': {}}
     # {'variable': None, 'function': 'model.fit', 'args': [], 'kwargs': {'X': 'X_train', 'y': 'y_train'}}
@@ -231,20 +222,17 @@ def step_3_check(lines) -> bool:
 
     # Check if fit() is called
     if len(function_calls) == 0:
-        print(f"{model_var}.fit() isn't called")
-        return False
+        return False, f"{model_var}.fit() isn't called"
 
     # Make sure fit() is only called once
     if len(function_calls) > 1:
-        print(f"{model_var}.fit() shouldn't be called more than once")
-        return False
+        return False, f"{model_var}.fit() shouldn't be called more than once"
 
     function_call = function_calls[0]
 
     # fit() shouldn't be assigned to any variables
     if function_call['variable'] is not None:
-        print(f"{model_var}.fit() shouldn't be assigned to any variables")
-        return False
+        return False, f"{model_var}.fit() shouldn't be assigned to any variables"
     
     # Make sure parameters passed to fit() are correct
     solution_1_args = [X_train_var, y_train_var]
@@ -267,13 +255,12 @@ def step_3_check(lines) -> bool:
         check_passed = False
     
     if not check_passed:
-        print(f'Incorrect parameters for {model_var}.fit(), are you correctly passing the training data to it?')
-        return False
+        return False, f'Incorrect parameters for {model_var}.fit(), are you correctly passing the training data to it?'
     
-    return True
+    return True, ''
 
 
-def step_4_check(lines) -> bool:
+def step_4_check(lines) -> tuple[bool, str]:
     # GOAL: Make predictions on the test dataset using the trained linear regression model
     # {'variable': 'y_pred', 'function': 'model.predict', 'args': ['X_test'], 'kwargs': {}}
     # {'variable': 'y_pred', 'function': 'model.predict', 'args': [], 'kwargs': {'X': 'X_test'}}
@@ -284,20 +271,17 @@ def step_4_check(lines) -> bool:
 
     # Check if predict() is called
     if len(function_calls) == 0:
-        print(f"{model_var} isn't called")
-        return False
+        return False, f"{model_var} isn't called"
 
     # Make sure predict() is only called once
     if len(function_calls) > 1:
-        print(f"{model_var}.predict() shouldn't be called more than once")
-        return False
+        return False, f"{model_var}.predict() shouldn't be called more than once"
 
     function_call = function_calls[0]
 
     # predict() should only be assigned to a single value and not None
     if not isinstance(function_call['variable'], str) or function_call['variable'] is None:
-        print(f"{model_var}.predict() should only be assigned to a single variable")
-        return False
+        return False, f"{model_var}.predict() should only be assigned to a single variable"
     
     y_pred_var = function_call['variable']
 
@@ -319,13 +303,12 @@ def step_4_check(lines) -> bool:
         check_passed = False
     
     if not check_passed:
-        print(f'Incorrect parameters for {model_var}.predict(), are you correctly passing the test data to it?')
-        return False
+        return False, f'Incorrect parameters for {model_var}.predict(), are you correctly passing the test data to it?'
 
-    return True
+    return True, ''
 
 
-def step_5_check(lines) -> bool:
+def step_5_check(lines) -> tuple[bool, str]:
     # GOAL: Get the mean squared error from the test dataset and the linear regression model's predictions
     # {'variable': 'mse', 'function': 'mean_squared_error', 'args': ['y_test', 'y_pred'], 'kwargs': {}}
     # {'variable': 'mse', 'function': 'mean_squared_error', 'args': [], 'kwargs': {'y_true': 'y_test', 'y_pred': 'y_pred'}}
@@ -337,20 +320,17 @@ def step_5_check(lines) -> bool:
 
     # Check if mean_squared_error() is called
     if len(function_calls) == 0:
-        print(f"mean_squared_error() isn't called")
-        return False
+        return False, f"mean_squared_error() isn't called"
 
     # Make sure mean_squared_error() is only called once
     if len(function_calls) > 1:
-        print(f"mean_squared_error() shouldn't be called more than once")
-        return False
+        return False, f"mean_squared_error() shouldn't be called more than once"
     
     function_call = function_calls[0]
 
     # mean_squared_error() should only be assigned to a single value and not None
     if not isinstance(function_call['variable'], str) or function_call['variable'] is None:
-        print("mean_squared_error() should only be assigned to a single variable")
-        return False
+        return False, "mean_squared_error() should only be assigned to a single variable"
     mse_var = function_call['variable']
     
     # Check parameters for mean_squared_error()
@@ -373,13 +353,12 @@ def step_5_check(lines) -> bool:
         check_passed = False
     
     if not check_passed:
-        print(f'Incorrect parameters for mean_squared_error(), are you correctly passing the test output and model output to it?')
-        return False
+        return False, f'Incorrect parameters for mean_squared_error(), are you correctly passing the test output and model output to it?'
 
-    return True
+    return True, ''
 
 
-def step_6_check(lines) -> bool:
+def step_6_check(lines) -> tuple[bool, str]:
     # GOAL: Print the value of the MSE variable
     # {'variable': None, 'function': 'print', 'args': ["'MSE:'", 'mse'], 'kwargs': {}}
     global mse_var
@@ -387,32 +366,27 @@ def step_6_check(lines) -> bool:
 
     # Check if print() is called
     if len(function_calls) == 0:
-        print(f"print() isn't called")
-        return False
+        return False, f"print() isn't called"
 
     # Make sure print() is only called once
     if len(function_calls) > 1:
-        print(f"print() shouldn't be called more than once")
-        return False
+        return False, f"print() shouldn't be called more than once"
     
     function_call = function_calls[0]
 
     # print() shouldn't be assigned to any variables
     if function_call['variable'] is not None:
-        print("print() shouldn't be assigned to any variables")
-        return False
+        return False, "print() shouldn't be assigned to any variables"
 
     # mse_var should be in print()'s args and kwargs should be empty
     if mse_var not in function_call['args']:
-        print('Are you printing out the correct variable for the MSE?')
-        return False
+        return False, 'Are you printing out the correct variable for the MSE?'
     
     # kwargs should be empty
     if function_call['kwargs'] != {}:
-        print("You don't need any keyword arguments for this print statement")
-        return False
+        return False, "You don't need any keyword arguments for this print statement"
     
-    return True
+    return True, ''
 
 
 if __name__ == '__main__':
@@ -430,10 +404,13 @@ if __name__ == '__main__':
     checks = [step_1_check, step_2_check, step_3_check, step_4_check, step_5_check, step_6_check]
     for i in range(len(checks)):
         check_func = checks[i]
-        if not check_func(lines):
+        is_correct, error_msg = check_func(lines)
+        if is_correct:
+            print(f'{green_text_code}Step {i + 1} Passed{reset_code}')
+        else:
             print(f'{red_text_code}Step {i + 1} Failed{reset_code}')
+            print(error_msg)
             sys.exit(1)
-        print(f'{green_text_code}Step {i + 1} Passed{reset_code}')
 
     print('Congratulations! You have passed this challenge! Here is your flag:')
     print_flag()

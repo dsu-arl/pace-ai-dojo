@@ -55,7 +55,7 @@ Don't worry about fully understanding this code. This just imports our necessary
 
 Complete the following steps to pass this challenge:
 
-1. Split the dataset into training and testing datasets using `train_test_split()`
+1. Split the dataset into training and testing datasets using `train_test_split()` where the test size is 20% of the original dataset and set a random state of 42.
 2. Create a linear regression model
 3. Fit the linear regression model to the training dataset
 4. Make predictions on the test dataset using the trained linear regression model
