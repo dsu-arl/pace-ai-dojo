@@ -19,4 +19,21 @@ accuracy = accuracy_score(y_test, y_pred)
 
 print(f'Accuracy: {accuracy:.2f}')
 ```
-To get this flag, create a logistic regression model, train it using the iris dataset, make predictions on the test dataset and retrieve its test dataset accuracy!
+To get this flag, create a Python file, copy and paste the following starter code, and then complete the following steps:
+```python
+from sklearn.datasets import load_iris
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+
+# Initializing the data
+iris = load_iris()
+X = iris.data
+y = iris.target
+```
+1. Split the dataset where the test dataset is 20% of the original and set a random state of 42
+2. Initialize a logistic regression model
+3. Train the logistic regression model on the iris dataset
+4. Make predictions on the test iris dataset
+5. Retrieve the model's test dataset accuracy and store it in a variable
+6. Print out the model's accuracy
