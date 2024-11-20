@@ -7,3 +7,6 @@
 [submodule "machine-learning/logistic-regression/paceAITester"]
 	path = machine-learning/logistic-regression/paceAITester
 	url = https://github.com/dsu-arl/paceAITester
+[submodule "machine-learning/decision-trees/paceAITester"]
+	path = machine-learning/decision-trees/paceAITester
+	url = https://github.com/dsu-arl/paceAITester
