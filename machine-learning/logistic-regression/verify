@@ -34,7 +34,7 @@ y_pred_var = None
 accuracy_var = None
 
 
-def step_1_check(lines: list[dict]):
+def step_1_check(lines):
     """
     Step Goal: Split the dataset where the test dataset is 20% of the original and set a random state of 42
 
@@ -83,7 +83,7 @@ def step_1_check(lines: list[dict]):
     return True, ''
 
 
-def step_2_check(lines: list[dict]):
+def step_2_check(lines):
     """
     Step Goal: Initialize a logistic regression model
 
@@ -121,7 +121,7 @@ def step_2_check(lines: list[dict]):
     return True, ''
 
 
-def step_3_check(lines: list[dict]):
+def step_3_check(lines):
     """
     Step Goal: Train the logistic regression model on the iris dataset
 
@@ -177,7 +177,7 @@ def step_3_check(lines: list[dict]):
     return True, ''
 
 
-def step_4_check(lines: list[dict]):
+def step_4_check(lines):
     """
     Step Goal: Make predictions on the test iris dataset
 
@@ -232,7 +232,7 @@ def step_4_check(lines: list[dict]):
     return True, ''
 
 
-def step_5_check(lines: list[dict]):
+def step_5_check(lines):
     """
     Step Goal: Retrieve the model's test dataset accuracy and print it out
 
@@ -289,7 +289,7 @@ def step_5_check(lines: list[dict]):
     return True, ''
 
 
-def step_6_check(lines: list[dict]):
+def step_6_check(lines):
     """
     Step Goal: Print out the model's accuracy
 
