@@ -1,94 +1,66 @@
 # AI Dojo
 
-This repositories features an example dojo.
+Use this template to make new dojos!
 
-The dojo is defined by [dojo.yml](./dojo.yml).
-
-It contains two modules, `hello` and `world`.
-
-The module `hello` features challenges `apple` and `banana`.
-
-The module `world` features challenges `earth`, `mars`, and `venus`.
-
-Each challenge demonstrates different challenge definition capabilities, in an increasing order of feature complexity.
-
-See each challenge's README for further information:
-- [apple](./hello/apple)
-- [banana](./hello/banana)
-- [earth](./world/earth)
-- [mars](./world/mars)
-- [venus](./world/venus)
-
-## YAML Structure of `dojo.yml`
-
-### Dojo
-
-The top-level object is the `Dojo`. It consists of six properties:
-
-- `id`: **Required**. A unique identifier for the Dojo.
-- `name`: **Required**. The display name of the Dojo.
-- `description`: **Optional**. Additional details about the Dojo. This can include formatted markdown text.
-- `type`: **Optional**. This field can take the values `course`, `topic`, or `hidden`. `course` places it in the "Courses" section. `topic` places the Dojo in the "Topics" section. `hidden` means the Dojo won't be listed (but is still accessible). If the type field is omitted or contains a value other than these three, the Dojo will appear in the "More" section.
-- `password`: **Optional**. A password that users need to join the Dojo. If omitted, the Dojo is open for anyone to join.
-- `modules`: **Required**. An array of `Module` objects.
-
-### Module
-
-Each `Module` object within the `modules` array consists of the following properties:
-
-- `id`: **Required**. A unique identifier for the Module.
-- `name`: **Required**. The display name of the Module.
-- `description`: **Optional**. Additional details about the Module.
-- `challenges`: **Required**. An array of `Challenge` objects.
-
-### Challenge
-
-Each `Challenge` object within the `challenges` array of a `Module` consists of the following properties:
-
-- `id`: **Required**. A unique identifier for the Challenge.
-- `name`: **Required**. The display name of the Challenge.
-- `description`: **Optional**. Additional details about the Challenge.
-
-## Importing Modules and Challenges
-
-For an example of how you can import another dojo's challenges, see: [pwncollege/example-import-dojo](https://github.com/pwncollege/example-import-dojo).
-
-## Automatically Updating Dojo
-
-For instructions on how you can setup automatic dojo updates, using GitHub actions, see: [pwncollege/dojo-update](https://github.com/pwncollege/dojo-update).
-
-## Challenge Writing Laws
-
-### The Flag
-
-The flag is located at `/flag`, and is only readable by `root`. 
-The challenge will execute as `root`.
-Nothing else is true.
-
-Do not assume any structure to the flag. 
-It may or may not have a prefix/suffix. 
-It may or may not be 50 bytes long.
-These things WILL change, and if you rely on them, your challenge WILL break.
-
-### The Challenge
-
-The challenge is [`setuid`](https://en.wikipedia.org/wiki/Setuid).
-This is how your challenge will execute as `root`.
-
-What this *really* means:
-- The process will run with an **effective** user of `root`.
-- The process will run with a **real** user of `hacker`.
-
-While an **effective** user of `root` is sufficient for opening the flag, there are some caveats.
-When `/bin/sh` (which is linked to `/bin/dash`) is run under this, it will immediately set the **effective** user to the **real** user (unless the `-p` flag is provided).
-This means that both the **effective** and **real** user will be `hacker`, and the flag will not be accessible.
-This affects `system`, which ultimately just runs `/bin/sh`.
-
-The challenge can rememedy this by explicitly setting the **real** user to the **effective** user:
-```c
-setreuid(geteuid(), -1)
+## Before running `manage_dojo.py` for first time
+```commandline
+pip install inquirerpy
+pip install PyYAML
 ```
 
+## Dojo YAML File
+```yaml
+id: # ID of the dojo (lowercase version of name with hyphens replacing spaces)
+name: # Dojo Name
+type: # What category to put the dojo under (for example: roadshow)
+award:
+  emoji: # Emoji award to give user upon dojo completion
+modules:
+- id: example # Module ID
+  name: Example # Module Name
+```
 
+## Module YAML File
+```yaml
+name: # module name - displayed in the web page (should have spaces, uppercase as needed)
+challenges: # list each challenge, make a directory for each challenge (must match the id)
+  - id: # lowercase, no spaces
+    name: # short descriptive name of the challenge
+    allow_privileged: # true allows practice mode, false hides practice mode
+    # There are more flags like "password" that are not listed here
+  - id: example
+    name: This is an Example Module
+    allow_privileged: false
+```
 
+## Automatic Dojo Updates
+After completing the following steps, your dojo in our production version of pwncollege will be automatically updated whenever you make a push to the `main` branch.
 
+NOTE: To do this, your dojo has to already be added to the production version of [our pwncollege instance](https://pwncollege.arl.madren.org/). If it hasn't been, you'll have to manually add it the first time.
+
+### Setting the `dojo` field
+- Reference ID of your dojo
+  - For example: `official-dojo` or `unofficial-dojo~1a2b3c4d`
+- Found on the `admin` page of dojo
+- Copy and paste this value into the `dojo` field in the `.github/workflows/update.yml` file
+
+### Creating the `UPDATE_CODE` secret
+To get the dojo's update code, go to the `Admin` page of your dojo, hover over the `Update` button, and copy the URL. The last part of the URL is the update code. It will look like
+```
+https://pwncollege.arl.madren.org/dojo/DOJO_NAME/update/UPDATE_CODE
+```
+
+To add the update code as a GitHub secret:
+1. In dojo repository, click on `Settings`
+2. On the left side under `Security`, click on `Actions`
+3. Under `repository secrets`, create `UPDATE_CODE` secret if it doesn't exist in your repository by clicking `New repository secret`:
+    1. Click `New repository secret`
+    2. Set `name` to be `UPDATE_CODE`
+    3. Paste in the copied URL and delete everything except the update code at the end
+4. If the secret already exists in the repository:
+    1. Click the edit button (pencil icon) in the same row as `UPDATE_CODE`
+    2. Paste in the copied URL and delete everything except the update code at the end
+    3. Click `Update secret`
+
+### Reference
+[pwncollege/dojo-update](https://github.com/pwncollege/dojo-update)
