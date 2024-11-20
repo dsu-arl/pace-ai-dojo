@@ -1,9 +1,6 @@
 [submodule "machine-learning/splitting-dataset/paceAITester"]
 	path = machine-learning/splitting-dataset/paceAITester
 	url = https://github.com/dsu-arl/paceAITester
-[submodule "machine-learning/hyperparameters/paceAITester"]
-	path = machine-learning/hyperparameters/paceAITester
-	url = https://github.com/dsu-arl/paceAITester
 [submodule "machine-learning/linear-regression/paceAITester"]
 	path = machine-learning/linear-regression/paceAITester
 	url = https://github.com/dsu-arl/paceAITester
