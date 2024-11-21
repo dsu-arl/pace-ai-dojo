@@ -46,9 +46,7 @@ So putting all of that together we get the following:
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 ```
 
-```
 NOTE: Another useful parameter to set in 'train_test_split()' is the 'random_state' parameter which controls the randomness of the data splitting process, ensuring that you can reproduce the same split every time you run the code.
-```
 
 Create a Python file and copy and paste the following imports statements into the top of the file before starting on the steps:
 ```python
