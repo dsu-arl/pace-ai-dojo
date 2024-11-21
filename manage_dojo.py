@@ -6,9 +6,6 @@ import subprocess
 import yaml
 
 
-# Probably will want to add this as a submodule
-
-
 ######################### HELPER FUNCTIONS #########################
 def read_dojo_yml():
     with open('dojo.yml', 'r') as file:

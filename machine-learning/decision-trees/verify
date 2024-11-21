@@ -2,27 +2,15 @@
 import sys
 sys.path.append('/challenge')
 
-from paceAITester.verify_helpers import extract_python_details, find_function_call
-
-
 def print_flag():
-    try:
-        with open("/flag", "r") as f:
-            print(f.read())
-    except FileNotFoundError:
-        print("Error: Flag file not found.")
+	try:
+		with open("/flag", "r") as f:
+			print(f.read())
+	except FileNotFoundError:
+		print("Error: Flag file not found.")
 
-""" Starter code
-from sklearn.datasets import load_iris
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
-
-# Initializing the data
-iris = load_iris()
-X = iris.data
-y = iris.target
-"""
+# Add your imports and other code below here
+from paceAITester.verify_helpers import extract_python_details, find_function_call
 
 # Variable names
 X_train_var = None
@@ -41,7 +29,7 @@ def step_1_check(lines):
     :param lines: List of dictionaries containing Python function calls from input file
     :type lines: list[dict]
     :return: A tuple containing a boolean indicating success or failure of the validation,
-             and a string message providing error details if failure
+             and a string message providing error details if failure.
     :rtype: tuple[bool, str]
     """
     # {'variable': ('X_train', 'X_test', 'y_train', 'y_test'), 'function': 'train_test_split', 'args': ['X', 'y'], 'kwargs': {'test_size': '0.2', 'random_state': '42'}}
@@ -85,45 +73,45 @@ def step_1_check(lines):
 
 def step_2_check(lines):
     """
-    Step Goal: Initialize a logistic regression model
+    Step Goal: Initialize a decision tree classifier model
 
     :param lines: List of dictionaries containing Python function calls from input file
     :type lines: list[dict]
     :return: A tuple containing a boolean indicating success or failure of the validation,
-             and a string message providing error details if failure
+             and a string message providing error details if failure.
     :rtype: tuple[bool, str]
     """
-    # {'variable': 'model', 'function': 'LogisticRegression', 'args': [], 'kwargs': {}}
+    # {'variable': 'model', 'function': 'DecisionTreeClassifier', 'args': [], 'kwargs': {}}
     global model_var
-    function_calls = find_function_call(lines, 'LogisticRegression')
+    function_calls = find_function_call(lines, 'DecisionTreeClassifier')
 
     # Check if LogisticRegression is called
     if len(function_calls) == 0:
-        return False, "LogisticRegression isn't called"
+        return False, "DecisionTreeClassifier isn't called"
     
     # LogisticRegression() should only be called once
     if len(function_calls) > 1:
-        return False, 'LogisticRegression() should only be called once'
+        return False, 'DecisionTreeClassifier() should only be called once'
     
     function_call = function_calls[0]
 
     # Make sure it's assigned to a variable (not including _)
     if function_call['variable'] is None:
-        return False, 'LogisticRegression() should be assigned to a variable'
+        return False, 'DecisionTreeClassifier() should be assigned to a variable'
     
     model_var = function_call['variable']
 
     solution_args = []
     solution_kwargs = {}
     if function_call['args'] != solution_args or function_call['kwargs'] != solution_kwargs:
-        return False, "You shouldn't be passing any parameters to LogisticRegression() for this challenge"
+        return False, "You shouldn't be passing any parameters to DecisionTreeClassifier() for this challenge"
 
     return True, ''
 
 
 def step_3_check(lines):
     """
-    Step Goal: Train the logistic regression model on the iris dataset
+    Step Goal: Train the decision tree classifier model on the iris dataset
 
     :param lines: List of dictionaries containing Python function calls from input file
     :type lines: list[dict]
