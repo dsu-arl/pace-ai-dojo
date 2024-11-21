@@ -6,10 +6,6 @@ import subprocess
 import yaml
 
 
-# Probably will want to add this as a submodule
-# Add option to add submodule to all challenges in module or just one
-
-
 ######################### HELPER FUNCTIONS #########################
 def read_dojo_yml():
     with open('dojo.yml', 'r') as file:
