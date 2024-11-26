@@ -12,13 +12,48 @@ def print_flag():
 # Add your imports and other code below here
 from paceAITester.verify_helpers import extract_python_details
 
+# Update all submodules: git submodule foreach git pull origin master
+
+def find_variable_init(variables, var_name):
+    for var in variables:
+        if var['variable'] == var_name:
+            return var
+    return None
+
+def check(variables):
+    var_call = find_variable_init(variables, 'n_estimators')
+    if var_call is None:
+        return False, "Make sure you have a variable called 'n_estimators'"
+    
+    guess = var_call['value']
+    if guess != 140:
+        if guess > 140:
+            direction = 'Lower'
+        else:
+            direction = 'Higher'
+        return False, f'Incorrect (HINT: {direction})'
+
+    return True, ''
+
+# Make sure all the other lines from the starter code are there
+
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         print('Usage: verify <user_script>.py')
         sys.exit(1)
     
     script_path = sys.argv[1]
-    lines = extract_python_details(script_path)
+    _, variables = extract_python_details(script_path)
 
-    for line in lines:
-        print(line)
+    red_text_code = '\033[31m'
+    green_text_code = '\033[32m'
+    reset_code = '\033[0m'
+
+    passed, error_msg = check(variables)
+    if not passed:
+        print(f"{red_text_code}{error_msg}{reset_code}")
+        sys.exit(1)
+    
+    print(f'{green_text_code}Correct{reset_code}')
+    print('Congratulations! You have passed this challenge! Here is your flag:')
+    print_flag()
