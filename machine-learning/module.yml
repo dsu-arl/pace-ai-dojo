@@ -12,3 +12,6 @@ challenges:
 - id: decision-trees
   name: Decision Trees
   allow_privileged: false
+- id: hyperparameters
+  name: Hyperparameters
+  allow_privileged: false

@@ -1,0 +1,24 @@
+#!/opt/pwn.college/python
+import sys
+sys.path.append('/challenge')
+
+def print_flag():
+	try:
+		with open("/flag", "r") as f:
+			print(f.read())
+	except FileNotFoundError:
+		print("Error: Flag file not found.")
+
+# Add your imports and other code below here
+from paceAITester.verify_helpers import extract_python_details
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print('Usage: verify <user_script>.py')
+        sys.exit(1)
+    
+    script_path = sys.argv[1]
+    lines = extract_python_details(script_path)
+
+    for line in lines:
+        print(line)
