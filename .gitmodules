@@ -10,3 +10,6 @@
 [submodule "machine-learning/decision-trees/paceAITester"]
 	path = machine-learning/decision-trees/paceAITester
 	url = https://github.com/dsu-arl/paceAITester
+[submodule "machine-learning/random-forests/paceAITester"]
+	path = machine-learning/random-forests/paceAITester
+	url = https://github.com/dsu-arl/paceAITester
