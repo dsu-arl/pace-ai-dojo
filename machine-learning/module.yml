@@ -12,3 +12,6 @@ challenges:
 - id: decision-trees
   name: Decision Trees
   allow_privileged: false
+- id: random-forests
+  name: Random Forests
+  allow_privileged: false
