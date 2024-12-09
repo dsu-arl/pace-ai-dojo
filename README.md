@@ -33,6 +33,12 @@ challenges: # list each challenge, make a directory for each challenge (must mat
     allow_privileged: false
 ```
 
+## Updating Submodules
+If you're using a submodule as a way to reuse code across your challenge checkers and you make a change to the submodule, you can update the submodules in all of your challenges by running the command in the dojo directory:
+```commandline
+git submodule foreach git pull origin main
+```
+
 ## Automatic Dojo Updates
 After completing the following steps, your dojo in our production version of pwncollege will be automatically updated whenever you make a push to the `main` branch.
 
