@@ -12,4 +12,6 @@
 	url = https://github.com/dsu-arl/paceAITester
 [submodule "machine-learning/random-forests/paceAITester"]
 	path = machine-learning/random-forests/paceAITester
+[submodule "machine-learning/hyperparameters/paceAITester"]
+	path = machine-learning/hyperparameters/paceAITester
 	url = https://github.com/dsu-arl/paceAITester
