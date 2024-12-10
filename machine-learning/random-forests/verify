@@ -36,7 +36,6 @@ def step_1_check(lines):
     global X_test_var
     global y_train_var
     global y_test_var
-    print(lines)
     function_calls = find_function_call(lines, 'train_test_split')
 
     # Check if function is called
