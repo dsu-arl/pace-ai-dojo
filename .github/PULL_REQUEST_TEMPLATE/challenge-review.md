@@ -2,7 +2,7 @@
 name: Challenge Review
 about: Used when reviewing a new or existing challenge for a module
 title: "[<MODULE NAME>] <Challenge Name>"
-labels:
+labels: ''
 assignees: ''
 
 ---
