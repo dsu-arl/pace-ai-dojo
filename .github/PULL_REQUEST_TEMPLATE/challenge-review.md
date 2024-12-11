@@ -1,11 +1,3 @@
----
-name: Challenge Review
-about: Used when reviewing a new or existing challenge for a module
-title: "[<MODULE NAME>] <Challenge Name>"
-labels: ''
-assignees: ''
-
----
 Assignee Checklist:
 - [ ] Mark yourself as the assignee if you are the one who worked on it
 - [ ] Add the `new challenge` label if it's a new challenge, `edit challenge` if it's for an existing challenge
