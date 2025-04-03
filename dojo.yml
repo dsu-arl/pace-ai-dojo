@@ -6,3 +6,4 @@ award:
 modules:
 - id: machine-learning
   name: Machine Learning
+  image: cocoa23/pace-ai-dojo-machinelearning-module
