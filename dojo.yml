@@ -1,6 +1,5 @@
 id: ai
 name: AI
-image: cford23/pace-ai-dojo
 award:
   emoji: 🤖
 modules:

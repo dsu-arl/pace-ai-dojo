@@ -1,4 +1,5 @@
 name: Machine Learning
+image: cford23/pace-ai-dojo
 challenges:
 - id: splitting-dataset
   name: Splitting Datasets
