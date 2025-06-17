@@ -1,6 +1,6 @@
 id: ai
 name: AI
-type: roadshow
+image: cford23/pace-ai-dojo
 award:
   emoji: 🤖
 modules:

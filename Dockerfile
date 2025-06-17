@@ -5,9 +5,10 @@ RUN apt update
 RUN apt install python3.12 -y
 
 # Necessary Python libraries
-RUN apt install python3-sklearn -y
-RUN apt install python3-pandas -y
-RUN apt install python3-numpy -y
+RUN apt install python3-tqdm -y
+# RUN apt install python3-sklearn -y
+# RUN apt install python3-pandas -y
+# RUN apt install python3-numpy -y
 
 RUN <<EOF
   if id ubuntu; then userdel -f -r ubuntu; fi
