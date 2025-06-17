@@ -5,7 +5,7 @@ RUN apt update
 RUN apt install python3.12 -y
 
 # Necessary Python libraries
-RUN apt install python3-scikit-learn -y
+RUN apt install python3-sklearn -y
 RUN apt install python3-pandas -y
 RUN apt install python3-numpy -y
 
