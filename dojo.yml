@@ -1,8 +1,8 @@
 id: ai
 name: AI
-image: cford23/pace-ai-dojo
 award:
   emoji: 🤖
 modules:
 - id: machine-learning
   name: Machine Learning
+  image: cford23/pace-ai-dojo-machinelearning
