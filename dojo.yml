@@ -1,8 +1,8 @@
 id: ai
 name: AI
-type: roadshow
 award:
   emoji: 🤖
 modules:
 - id: machine-learning
   name: Machine Learning
+  image: cford23/pace-ai-dojo-machinelearning

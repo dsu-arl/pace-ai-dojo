@@ -1,9 +1,6 @@
-#!/opt/pwn.college/python
+#!/usr/bin/exec-suid -- /usr/bin/python3.12 -I
 import sys
 sys.path.append('/challenge')
-
-from paceAITester.verify_helpers import *
-
 
 def print_flag():
     try:
@@ -11,6 +8,9 @@ def print_flag():
             print(f.read())
     except FileNotFoundError:
         print("Error: Flag file not found.")
+
+# Add your imports and other code below here
+from paceAITester.verify_helpers import *
 
 
 # Variable names
