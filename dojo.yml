@@ -5,5 +5,4 @@ award:
 modules:
 - id: machine-learning
   name: Machine Learning
-- id: deep-learning
-  name: Deep Learning
+  image: cford23/pace-ai-dojo-machinelearning
