@@ -10,3 +10,164 @@ def print_flag():
         print("Error: Flag file not found.")
 
 # Add your imports and other code below here
+from dataclasses import dataclass
+from paceAITester.verify_helpers import extract_python_details, find_function_call
+from typing import Dict, List, Tuple
+
+
+@dataclass
+class FunctionCall:
+    variable: str
+    function: str
+    args: List[str]
+    kwargs: Dict[str, any]
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, any]) -> 'FunctionCall':
+        return cls(
+            variable=data['variable'],
+            function=data['function'],
+            args=data['args'],
+            kwargs=data['kwargs']
+        )
+
+
+RED_TEXT_CODE = '\033[31m'
+GREEN_TEXT_CODE = '\033[32m'
+RESET_CODE = '\033[0m'
+
+
+def output_not_assigned_to_variable(function_call: FunctionCall) -> bool:
+    return function_call.variable is None
+
+
+class Validator:
+    def __init__(self, script_path: str):
+        self.lines = extract_python_details(script_path)
+        self.script_path = script_path
+
+        # User variables
+        self.X = None
+        self.y = None
+        self.model = None
+        self.predictions = None
+
+    def _step_1_check(self) -> Tuple[bool, str]:
+        """
+        Step Goal: Import tensorflow with the alias 'tf' and numpy with the alias 'np'.
+
+        :return: A tuple containing a boolean indicating success or failure of the validation,
+                and a string message providing error details if failure.
+        :rtype: tuple[bool, str]
+        """
+        # Correctly imports tensorflow as tf and numpy as np
+        with open(self.script_path, 'r') as file:
+            file_contents = file.read()
+        file_contents = file_contents.split('\n')
+        
+        if 'import tensorflow as tf' not in file_contents:
+            return False, 'Missing or incorrect tensorflow import line, did you import it with the specified alias?'
+        
+        if 'import numpy as np' not in file_contents:
+            return False, 'Missing or incorrect numpy import line, did you import it with the specified alias?'
+    
+        return True, ''
+
+    def _step_2_check(self) -> Tuple[bool, str]:
+        """
+        Step Goal: Define dataset for OR operation.
+
+        :return: A tuple containing a boolean indicating success or failure of the validation,
+                and a string message providing error details if failure.
+        :rtype: tuple[bool, str]
+        """
+        function_calls = find_function_call(self.lines, 'np.array')
+
+        if len(function_calls) == 0:
+            return False, "np.array isn't called"
+        
+        if len(function_calls) != 2:
+            return False, 'np.array should only be called twice, once for X and once for y'
+        
+        func_call_for_X = FunctionCall.from_dict(function_calls[0])
+        func_call_for_y = FunctionCall.from_dict(function_calls[1])
+        
+        if func_call_for_X.variable is None or func_call_for_y.variable is None:
+            return False, 'np.array should be assigned to a variable'
+        
+        self.X = func_call_for_X.variable
+        self.y = func_call_for_y.variable
+
+        if func_call_for_X.args != ['00011011']:
+            return False, f"Data passed to {self.X} doesn't match instructions."
+        
+        if func_call_for_y.args != ['0111']:
+            return False, f"Data passed to {self.y} doesn't match instructions."
+
+        return True, ''
+
+    def _step_3_check(self) -> Tuple[bool, str]:
+        # Creates single-layer perceptron with one dense layer, input shape of 2, sigmoid activation
+        function_name = 'tf.keras.Sequential'
+        function_calls = find_function_call(self.lines, function_name)
+
+        print(self.lines)
+
+        if len(function_calls) == 0:
+            return False, f"{function_name} isn't called"
+        if len(function_calls) > 1:
+            return False, f"{function_name} should only be called once"
+        
+        function_call = FunctionCall.from_dict(function_calls[0])
+        if output_not_assigned_to_variable(function_call):
+            return False, f''
+
+        self.model = function_call.variable
+
+        return True, ''
+
+    def _step_4_check(self) -> Tuple[bool, str]:
+        # Compiles the model with adam optimizer and binary_crossentropy loss function
+        return True, ''
+
+    def _step_5_check(self) -> Tuple[bool, str]:
+        # Trains the model for 1000 epochs with verbose=0
+        return True, ''
+
+    def _step_6_check(self) -> Tuple[bool, str]:
+        # Uses the trained model to make predictions on y and rounds the prediction using .round()
+        return True, ''
+
+    def _step_7_check(self) -> Tuple[bool, str]:
+        # Prints the rounded predictions
+        return True, ''
+
+    def verify_code(self) -> None:
+        checks = [
+            self._step_1_check, self._step_2_check, self._step_3_check, self._step_4_check,
+            self._step_5_check, self._step_6_check, self._step_7_check
+        ]
+        step = 1
+        for check_func in checks:
+            is_correct, error_msg = check_func()
+            if is_correct:
+                print(f'{GREEN_TEXT_CODE}Step {step} Passed{RESET_CODE}')
+                step += 1
+            else:
+                print(f'{RED_TEXT_CODE}Step {step} Failed{RESET_CODE}')
+                print(error_msg)
+                sys.exit(1)
+        
+        print('Congratulations! You have passed this challenge! Here is your flag:')
+        print_flag()
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print('Usage: verify <user_script>.py')
+        sys.exit(1)
+    
+    script_path = sys.argv[1]
+
+    validator = Validator(script_path)
+    validator.verify_code()
