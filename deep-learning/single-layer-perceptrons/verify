@@ -10,35 +10,14 @@ def print_flag():
         print("Error: Flag file not found.")
 
 # Add your imports and other code below here
-from dataclasses import dataclass
-from paceAITester.verify_helpers import extract_python_details, find_function_call
-from typing import Dict, List, Tuple
+from paceAITester.config import GREEN_TEXT_CODE, RED_TEXT_CODE, RESET_CODE
+from paceAITester.datatypes import FunctionCall
+from paceAITester.verify_helpers import extract_python_details, find_function_call, output_not_assigned_to_variable
+from typing import List, Dict, Tuple
 
 
-@dataclass
-class FunctionCall:
-    variable: str
-    function: str
-    args: List[str]
-    kwargs: Dict[str, any]
-
-    @classmethod
-    def from_dict(cls, data: Dict[str, any]) -> 'FunctionCall':
-        return cls(
-            variable=data['variable'],
-            function=data['function'],
-            args=data['args'],
-            kwargs=data['kwargs']
-        )
-
-
-RED_TEXT_CODE = '\033[31m'
-GREEN_TEXT_CODE = '\033[32m'
-RESET_CODE = '\033[0m'
-
-
-def output_not_assigned_to_variable(function_call: FunctionCall) -> bool:
-    return function_call.variable is None
+def function_not_called(function_calls: List[Dict]) -> bool:
+    return len(function_calls) == 0
 
 
 class Validator:
@@ -81,65 +60,193 @@ class Validator:
                 and a string message providing error details if failure.
         :rtype: tuple[bool, str]
         """
-        function_calls = find_function_call(self.lines, 'np.array')
+        function_name = 'np.array'
+        function_calls = find_function_call(self.lines, function_name)
 
-        if len(function_calls) == 0:
-            return False, "np.array isn't called"
+        if function_not_called(function_calls):
+            return False, f"{function_name} isn't called"
         
         if len(function_calls) != 2:
-            return False, 'np.array should only be called twice, once for X and once for y'
+            return False, f'{function_name} should only be called twice, once for X and once for y'
         
         func_call_for_X = FunctionCall.from_dict(function_calls[0])
         func_call_for_y = FunctionCall.from_dict(function_calls[1])
         
         if func_call_for_X.variable is None or func_call_for_y.variable is None:
-            return False, 'np.array should be assigned to a variable'
+            return False, f'{function_name} should be assigned to a variable'
         
         self.X = func_call_for_X.variable
         self.y = func_call_for_y.variable
 
-        if func_call_for_X.args != ['00011011']:
+        if func_call_for_X.args != ['[[0, 0], [0, 1], [1, 0], [1, 1]]']:
             return False, f"Data passed to {self.X} doesn't match instructions."
         
-        if func_call_for_y.args != ['0111']:
+        if func_call_for_y.args != ['[[0], [1], [1], [1]]']:
             return False, f"Data passed to {self.y} doesn't match instructions."
 
         return True, ''
 
     def _step_3_check(self) -> Tuple[bool, str]:
-        # Creates single-layer perceptron with one dense layer, input shape of 2, sigmoid activation
+        """
+        Step Goal: Create single-layer perceptron with one dense layer, input shape of 2, sigmoid activation.
+
+        :return: A tuple containing a boolean indicating success or failure of the validation,
+                and a string message providing error details if failure.
+        :rtype: tuple[bool, str]
+        """
         function_name = 'tf.keras.Sequential'
         function_calls = find_function_call(self.lines, function_name)
 
-        print(self.lines)
-
-        if len(function_calls) == 0:
+        if function_not_called(function_calls):
             return False, f"{function_name} isn't called"
         if len(function_calls) > 1:
             return False, f"{function_name} should only be called once"
         
         function_call = FunctionCall.from_dict(function_calls[0])
         if output_not_assigned_to_variable(function_call):
-            return False, f''
+            return False, f'{function_name} output should be assigned to a variable'
 
         self.model = function_call.variable
+
+        # Make sure that args only contains Dense layer with correct arguments
+        if len(function_call.args) > 1:
+            return False, f'{self.model} should only contain a single Dense layer'
+
+        solution_args = ["[tf.keras.layers.Dense(units=1, input_shape=[2], activation='sigmoid')]"]
+        if function_call.args != solution_args:
+            return False, 'Missing or incorrect parameters for Dense layer'
 
         return True, ''
 
     def _step_4_check(self) -> Tuple[bool, str]:
-        # Compiles the model with adam optimizer and binary_crossentropy loss function
+        """
+        Step Goal: Compile the model with adam optimzier and binary_crossentropy loss function.
+
+        :return: A tuple containing a boolean indicating success or failure of the validation,
+                and a string message providing error details if failure.
+        :rtype: tuple[bool, str]
+        """
+        function_name = f'{self.model}.compile'
+        function_calls = find_function_call(self.lines, function_name)
+
+        if function_not_called(function_calls):
+            return False, f"{function_name} isn't called"
+        if len(function_calls) > 1:
+            return False, f"{function_name} should only be called once"
+    
+        function_call = FunctionCall.from_dict(function_calls[0])
+        if function_call.variable is not None:
+            return False, f"{self.model}.compile() shouldn't be assigned to a variable"
+        
+        solution_kwargs = {'optimizer': "'adam'", 'loss': "'binary_crossentropy'"}
+        if function_call.kwargs != solution_kwargs:
+            return False, f"Missing or incorrect optimizer and loss function passed to {self.model}.compile()"
+
         return True, ''
 
     def _step_5_check(self) -> Tuple[bool, str]:
-        # Trains the model for 1000 epochs with verbose=0
+        """
+        Step Goal: Train the model for 1000 epochs.
+
+        :return: A tuple containing a boolean indicating success or failure of the validation,
+                and a string message providing error details if failure.
+        :rtype: tuple[bool, str]
+        """
+        function_name = f'{self.model}.fit'
+        function_calls = find_function_call(self.lines, function_name)
+
+        if function_not_called(function_calls):
+            return False, f"{function_name} isn't called"
+        if len(function_calls) > 1:
+            return False, f"{function_name} should only be called once"
+        
+        function_call = FunctionCall.from_dict(function_calls[0])
+        if function_call.variable is not None:
+            return False, f"{self.model}.compile() shouldn't be assigned to a variable"
+        
+        solution_args = [self.X, self.y]
+        if function_call.args != solution_args:
+            return False, f"Missing or incorrect parameters, are you passing your dataset and labels to {self.model}.fit()?"
+
+        solution_kwargs = {'epochs': '1000', 'verbose': '0'}
+        if function_call.kwargs != solution_kwargs:
+            return False, f"Missing or incorrect parameters, are you training for 1000 epochs and suppressing the training output?"
+
         return True, ''
 
     def _step_6_check(self) -> Tuple[bool, str]:
-        # Uses the trained model to make predictions on y and rounds the prediction using .round()
+        """
+        Step Goal: Use the trained model to make predictions for X, rounding predictions to 0 or 1.
+
+        :return: A tuple containing a boolean indicating success or failure of the validation,
+                and a string message providing error details if failure.
+        :rtype: tuple[bool, str]
+        """
+        # Validation for model.predict()
+        predict_function_name = f'{self.model}.predict'
+        function_calls = find_function_call(self.lines, predict_function_name)
+
+        if function_not_called(function_calls):
+            return False, f"{predict_function_name} isn't called"
+        if len(function_calls) > 1:
+            return False, f"{predict_function_name} should only be called once"
+        
+        function_call = FunctionCall.from_dict(function_calls[0])
+        if output_not_assigned_to_variable(function_call):
+            return False, f'{predict_function_name} output should be assigned to a variable'
+
+        self.predictions = function_call.variable
+
+        solution_args = [self.X]
+        if function_call.args != solution_args:
+            return False, f'{predict_function_name} should take a single argument {self.X}'
+        
+        solution_kwargs = {}
+        if function_call.kwargs != solution_kwargs:
+            return False, f'{predict_function_name} should not have any keyword arguments for this challenge.'
+
+        # Validation for predictions.round()
+        round_function_name = f'{self.predictions}.round'
+        function_calls = find_function_call(self.lines, round_function_name)
+
+        if function_not_called(function_calls):
+            return False, f"{round_function_name} isn't called"
+        if len(function_calls) > 1:
+            return False, f"{round_function_name} should only be called once"
+        
+        function_call = FunctionCall.from_dict(function_calls[0])
+
+        if function_call.args != [] or function_call.kwargs != []:
+            return False, f"{round_function_name} shouldn't have any parameters passed to it"
+
+        # Reassign self.predictions if user stored result in new variable after rounding
+        if function_call.variable is not None and function_call.variable != self.predictions:
+            self.predictions = function_call.variable
+
         return True, ''
 
     def _step_7_check(self) -> Tuple[bool, str]:
-        # Prints the rounded predictions
+        """
+        Step Goal: Print the rounded predictions from the trained model.
+
+        :return: A tuple containing a boolean indicating success or failure of the validation,
+                and a string message providing error details if failure.
+        :rtype: tuple[bool, str]
+        """
+        function_name = 'print'
+        function_calls = find_function_call(self.lines, function_name)
+
+        if function_not_called(function_calls):
+            return False, f"{function_name} isn't called"
+        if len(function_calls) > 1:
+            return False, f"{function_name} should only be called once"
+        
+        function_call = FunctionCall.from_dict(function_calls[0])
+
+        solution_args = [self.predictions]
+        if function_call.args != solution_args:
+            return False, f'Incorrect parameters passed to print(), are you passing your rounded predictions to the print() function?'
+
         return True, ''
 
     def verify_code(self) -> None:

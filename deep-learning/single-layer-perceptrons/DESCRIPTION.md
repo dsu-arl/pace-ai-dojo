@@ -68,8 +68,8 @@ Create a new Python file in your home directory and follow these steps to comple
 4. Compile the model with:
     * `adam` optimizer for efficient gradient descent.
     * `binary_crossentropy` loss function, suitable for binary classification.
-5. Train the model on X and y for 1000 epochs with verbose=0 to suppress training output.
-6. Use the trained model to predict outputs for X, rounding predictions to 0 or 1 using `.round()`.
+5. Train the model on `X` and `y` for 1000 epochs with `verbose=0` to suppress training output.
+6. Use the trained model to predict outputs for `X`, rounding predictions to 0 or 1 using `.round()`.
 7. Print the rounded predictions.
 8. Save your program and run it to test the output.
 9. To get the flag, run `/challenge/verify <yourfile>.py` to verify your solution.
